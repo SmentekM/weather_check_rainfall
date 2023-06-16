@@ -1,18 +1,16 @@
 import json
 import requests
 import datetime
+import os
 
-open('historia.txt', 'a')
-# date_today = datetime.date.today()
-date_today_str = datetime.datetime.today().strftime('%Y-%m-%d')
-
-historia_sprawdzania = {}
-with open('historia.txt', 'r') as f:
-    for ele in f:
-        historia_sprawdzania = json.loads(ele.replace("'", '"'))
+plik_zapisu = "historia.txt"
+if not os.path.exists(plik_zapisu):
+    historia_sprawdzania = {}
+else:
+    with open(plik_zapisu, "r") as f:
+        historia_sprawdzania = json.load(f)
 
 sprawdzana_data = input('Podaj datę ( format daty : YYYY-MM-DD): ')
-
 
 if sprawdzana_data == "":
     data_teraz = datetime.datetime.today() + datetime.timedelta(days=1)
@@ -47,8 +45,8 @@ else:
     print(dane)
     historia_sprawdzania[sprawdzana_data] = dane
 
-with open('historia.txt', 'w') as f:
-    f.write(str(historia_sprawdzania))
+with open(plik_zapisu, "w") as f:
+    json.dump(historia_sprawdzania, f)
 
 if dane[0] == '' or dane[0] < 0:
     print('Nie wiem.')
